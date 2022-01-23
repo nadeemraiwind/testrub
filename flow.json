@@ -27,8 +27,8 @@
         "onceDelay": 0.1,
         "topic": "",
         "payload": "",
-        "payloadType": "date",
-        "x": 290,
+        "payloadType": "num",
+        "x": 280,
         "y": 180,
         "wires": [
             []
