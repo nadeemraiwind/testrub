@@ -151,34 +151,15 @@
         "className": ""
     },
     {
-        "id": "ebe7cd75fe72b23c",
-        "type": "ui_spacer",
-        "z": "d06f9cfb15756747",
-        "name": "spacer",
-        "group": "66e1f26997377d5e",
-        "order": 1,
-        "width": 4,
-        "height": 1
-    },
-    {
-        "id": "12c16f4c39c60bee",
-        "type": "ui_spacer",
-        "z": "d06f9cfb15756747",
-        "name": "spacer",
-        "group": "66e1f26997377d5e",
-        "order": 4,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "3ba377462fbfce2f",
-        "type": "ui_spacer",
-        "z": "d06f9cfb15756747",
-        "name": "spacer",
-        "group": "66e1f26997377d5e",
-        "order": 6,
-        "width": 1,
-        "height": 1
+        "id": "8efa20cac555ed51",
+        "type": "ui_group",
+        "name": "VTunnel",
+        "tab": "9fb6ad678668e996",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
     },
     {
         "id": "a7a6737caf130185",
@@ -187,7 +168,7 @@
         "name": "",
         "showStatusActivities": false,
         "showErrors": false,
-        "unitid": "",
+        "unitid": "1",
         "dataType": "Coil",
         "adr": "0",
         "quantity": "1",
@@ -209,7 +190,7 @@
         "label": "Mani Drive",
         "tooltip": "",
         "group": "66e1f26997377d5e",
-        "order": 5,
+        "order": 3,
         "width": 4,
         "height": 1,
         "passthru": true,
@@ -239,11 +220,11 @@
         "id": "95e2cde2d3fd05e6",
         "type": "ui_led",
         "z": "d06f9cfb15756747",
-        "order": 3,
+        "order": 1,
         "group": "66e1f26997377d5e",
-        "width": 1,
-        "height": 1,
-        "label": "",
+        "width": 0,
+        "height": 0,
+        "label": "Run",
         "labelPlacement": "left",
         "labelAlignment": "left",
         "colorForValue": [
@@ -263,7 +244,7 @@
         "showGlow": true,
         "name": "",
         "x": 590,
-        "y": 100,
+        "y": 240,
         "wires": []
     },
     {
@@ -288,32 +269,17 @@
         "ioFile": "",
         "useIOForPayload": false,
         "emptyMsgOnFail": false,
-        "x": 70,
-        "y": 100,
+        "x": 90,
+        "y": 260,
         "wires": [
             [
                 "7116e4a088e8663d",
-                "89578e7bf8484984"
+                "89578e7bf8484984",
+                "9ea687702afc44a1",
+                "b016ebb6c6a3b933"
             ],
             []
         ]
-    },
-    {
-        "id": "24e413fd48d0cfba",
-        "type": "debug",
-        "z": "d06f9cfb15756747",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 550,
-        "y": 300,
-        "wires": []
     },
     {
         "id": "7116e4a088e8663d",
@@ -328,7 +294,7 @@
         "property": "payload[0]",
         "topi": "topic",
         "x": 210,
-        "y": 100,
+        "y": 240,
         "wires": [
             [
                 "a734806078769ab5"
@@ -339,7 +305,7 @@
         "id": "a734806078769ab5",
         "type": "change",
         "z": "d06f9cfb15756747",
-        "name": "",
+        "name": "Exd vfd run",
         "rules": [
             {
                 "t": "set",
@@ -354,11 +320,10 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 380,
-        "y": 100,
+        "x": 370,
+        "y": 240,
         "wires": [
             [
-                "24e413fd48d0cfba",
                 "95e2cde2d3fd05e6"
             ]
         ]
@@ -376,7 +341,7 @@
         "property": "payload[1]",
         "topi": "topic",
         "x": 210,
-        "y": 140,
+        "y": 280,
         "wires": [
             [
                 "dcf7cd842e7bf7b0"
@@ -387,7 +352,7 @@
         "id": "dcf7cd842e7bf7b0",
         "type": "change",
         "z": "d06f9cfb15756747",
-        "name": "",
+        "name": "Exd vfd trip",
         "rules": [
             {
                 "t": "set",
@@ -402,8 +367,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 380,
-        "y": 140,
+        "x": 370,
+        "y": 280,
         "wires": [
             [
                 "0e285437c887d114"
@@ -416,9 +381,9 @@
         "z": "d06f9cfb15756747",
         "order": 2,
         "group": "66e1f26997377d5e",
-        "width": 1,
-        "height": 1,
-        "label": "",
+        "width": 0,
+        "height": 0,
+        "label": "Error",
         "labelPlacement": "left",
         "labelAlignment": "left",
         "colorForValue": [
@@ -438,7 +403,316 @@
         "showGlow": true,
         "name": "",
         "x": 590,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "9877e6a4474ef211",
+        "type": "ui_numeric",
+        "z": "d06f9cfb15756747",
+        "name": "",
+        "label": "",
+        "tooltip": "",
+        "group": "66e1f26997377d5e",
+        "order": 4,
+        "width": 2,
+        "height": 1,
+        "wrap": false,
+        "passthru": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "step": 1,
+        "className": "",
+        "x": 80,
+        "y": 80,
+        "wires": [
+            [
+                "33290b282c0bd0a6"
+            ]
+        ]
+    },
+    {
+        "id": "33290b282c0bd0a6",
+        "type": "modbus-write",
+        "z": "d06f9cfb15756747",
+        "name": "",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "unitid": "1",
+        "dataType": "HoldingRegister",
+        "adr": "0",
+        "quantity": "1",
+        "server": "7f1f42987619db28",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "x": 280,
+        "y": 80,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "3fbc3707b4f9dfaf",
+        "type": "modbus-write",
+        "z": "d06f9cfb15756747",
+        "name": "",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "unitid": "1",
+        "dataType": "Coil",
+        "adr": "1",
+        "quantity": "1",
+        "server": "7f1f42987619db28",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "x": 280,
         "y": 140,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "f1cdbbfc51b17708",
+        "type": "ui_switch",
+        "z": "d06f9cfb15756747",
+        "name": "",
+        "label": "VTunnel",
+        "tooltip": "",
+        "group": "8efa20cac555ed51",
+        "order": 3,
+        "width": 4,
+        "height": 1,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 80,
+        "y": 140,
+        "wires": [
+            [
+                "3fbc3707b4f9dfaf"
+            ]
+        ]
+    },
+    {
+        "id": "6260710e3581181c",
+        "type": "modbus-write",
+        "z": "d06f9cfb15756747",
+        "name": "",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "unitid": "1",
+        "dataType": "HoldingRegister",
+        "adr": "1",
+        "quantity": "1",
+        "server": "7f1f42987619db28",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "x": 280,
+        "y": 180,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "67f2117a24b982dc",
+        "type": "ui_numeric",
+        "z": "d06f9cfb15756747",
+        "name": "",
+        "label": "",
+        "tooltip": "",
+        "group": "8efa20cac555ed51",
+        "order": 4,
+        "width": 2,
+        "height": 1,
+        "wrap": false,
+        "passthru": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "step": 1,
+        "className": "",
+        "x": 80,
+        "y": 180,
+        "wires": [
+            [
+                "6260710e3581181c"
+            ]
+        ]
+    },
+    {
+        "id": "b7ea7161f9dd0014",
+        "type": "ui_led",
+        "z": "d06f9cfb15756747",
+        "order": 1,
+        "group": "8efa20cac555ed51",
+        "width": 0,
+        "height": 0,
+        "label": "Run",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#000000",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#008000",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 590,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "9ea687702afc44a1",
+        "type": "rbe",
+        "z": "d06f9cfb15756747",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": false,
+        "property": "payload[2]",
+        "topi": "topic",
+        "x": 210,
+        "y": 340,
+        "wires": [
+            [
+                "f638535e6c72f008"
+            ]
+        ]
+    },
+    {
+        "id": "f638535e6c72f008",
+        "type": "change",
+        "z": "d06f9cfb15756747",
+        "name": "Exd vfd run",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[2]",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 370,
+        "y": 340,
+        "wires": [
+            [
+                "b7ea7161f9dd0014"
+            ]
+        ]
+    },
+    {
+        "id": "b016ebb6c6a3b933",
+        "type": "rbe",
+        "z": "d06f9cfb15756747",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": false,
+        "property": "payload[3]",
+        "topi": "topic",
+        "x": 210,
+        "y": 380,
+        "wires": [
+            [
+                "b50b2d0a92bda42d"
+            ]
+        ]
+    },
+    {
+        "id": "b50b2d0a92bda42d",
+        "type": "change",
+        "z": "d06f9cfb15756747",
+        "name": "Exd vfd trip",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[3]",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 370,
+        "y": 380,
+        "wires": [
+            [
+                "6c4e54115e929c6e"
+            ]
+        ]
+    },
+    {
+        "id": "6c4e54115e929c6e",
+        "type": "ui_led",
+        "z": "d06f9cfb15756747",
+        "order": 2,
+        "group": "8efa20cac555ed51",
+        "width": 0,
+        "height": 0,
+        "label": "Error",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#000000",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#f4ff00",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 590,
+        "y": 380,
         "wires": []
     }
 ]
