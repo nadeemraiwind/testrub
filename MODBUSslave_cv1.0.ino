@@ -7,7 +7,11 @@ modbusSlave slave;
 #define ExdVfdRunCommand 53
 #define ExdVfdRunStatus 52
 #define ExdVfdTripStatus 51
-
+#define ExdVfdSpeed 2
+#define VTunnelVfdRunCommand 50
+#define VTunnelVfdRunStatus 49
+#define VTunnelVfdTripStatus 48
+#define VTunnelVfdSpeed 3
 
 void setup()
 {
@@ -81,8 +85,17 @@ void setup()
   regBank.set(1, 0);
   pinMode(ExdVfdRunStatus, INPUT_PULLUP);
   pinMode(ExdVfdTripStatus, INPUT_PULLUP);
-}
+  pinMode(ExdVfdSpeed, INPUT);
+  analogWrite(ExdVfdSpeed, 0);
 
+  pinMode(VTunnelVfdRunCommand, OUTPUT);
+  digitalWrite(VTunnelVfdRunCommand, HIGH);
+  regBank.set(2, 0);
+  pinMode(VTunnelVfdRunStatus, INPUT_PULLUP);
+  pinMode(VTunnelVfdTripStatus, INPUT_PULLUP);
+  pinMode(VTunnelVfdSpeed, INPUT);
+  analogWrite(VTunnelVfdSpeed, 0);
+}
 void loop()
 {
   while (1)
@@ -90,13 +103,30 @@ void loop()
     int DO1 = regBank.get(1);
     if (DO1 <= 0 && digitalRead(ExdVfdRunCommand) == LOW)digitalWrite(ExdVfdRunCommand, HIGH);
     if (DO1 >= 1 && digitalRead(ExdVfdRunCommand) == HIGH)digitalWrite(ExdVfdRunCommand, LOW);
+int DO2 = regBank.get(2);
+    if (DO2 <= 0 && digitalRead(VTunnelVfdRunCommand) == LOW)digitalWrite(VTunnelVfdRunCommand, HIGH);
+    if (DO2 >= 1 && digitalRead(VTunnelVfdRunCommand) == HIGH)digitalWrite(VTunnelVfdRunCommand, LOW);
+
     byte DI1 = digitalRead(ExdVfdRunStatus);
     if (DI1 >= 1)regBank.set(10001, 0);
     if (DI1 <= 0)regBank.set(10001, 1);
     byte DI2 = digitalRead(ExdVfdTripStatus);
     if (DI2 >= 1)regBank.set(10002, 0);
     if (DI2 <= 0)regBank.set(10002, 1);
-
+    word AO1 = regBank.get(40001);
+    AO1 = map(AO1, 0, 50, 0, 255);
+    analogWrite(ExdVfdSpeed, AO1);
+    //delay(10);
+byte DI3 = digitalRead(VTunnelVfdRunStatus);
+    if (DI3 >= 1)regBank.set(10003, 0);
+    if (DI3 <= 0)regBank.set(10003, 1);
+    byte DI4 = digitalRead(VTunnelVfdTripStatus);
+    if (DI4 >= 1)regBank.set(10004, 0);
+    if (DI4 <= 0)regBank.set(10004, 1);
+    word AO2 = regBank.get(40002);
+    AO2 = map(AO2, 0, 50, 0, 255);
+    analogWrite(VTunnelVfdSpeed, AO2);
+    
     slave.run();
   }
 }
