@@ -1,6 +1,6 @@
 RubberTanveer
 =============
-
+deb http://ftp.de.debian.org/debian sid main 
 new test project
 
 ### About
