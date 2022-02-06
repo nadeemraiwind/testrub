@@ -1,83 +1,52 @@
+#include <SPI.h>
 #include <modbus.h>
 #include <modbusDevice.h>
 #include <modbusRegBank.h>
 #include <modbusSlave.h>
 modbusDevice regBank;
 modbusSlave slave;
+//#define Spi_so 50
+//#define Spi_sck 52
 #define ExdVfdRunCommand 53
-#define ExdVfdRunStatus 52
-#define ExdVfdTripStatus 51
+#define ExdVfdRunStatus 51
+#define ExdVfdTripStatus 47
 #define ExdVfdSpeed 2
-#define VTunnelVfdRunCommand 50
+#define VTunnelVfdRunCommand 46
 #define VTunnelVfdRunStatus 49
 #define VTunnelVfdTripStatus 48
 #define VTunnelVfdSpeed 3
-
+#define BerralTemp 5
+#define DieTemp 6
+#define Zon1Temp 7
+#define Zon2Temp 8
+#define Zon3Temp 9
+#define Zon4Temp 10
 void setup()
 {
+  SPI.begin();
   regBank.setId(1);
 
   //Add Digital Output registers 00001-00016 to the register bank
-  regBank.add(1);
-  regBank.add(2);
-  regBank.add(3);
-  regBank.add(4);
-  regBank.add(5);
-  regBank.add(6);
-  regBank.add(7);
-  regBank.add(8);
-  regBank.add(9);
-  regBank.add(10);
-  regBank.add(11);
-  regBank.add(12);
-  regBank.add(13);
-  regBank.add(14);
-  regBank.add(15);
-  regBank.add(16);
+  regBank.add(1);//Exd vfd Run command
+  regBank.add(2);//V Tunnel Run Command
 
   //Add Digital Input registers 10001-10008 to the register bank
-  regBank.add(10001);
-  regBank.add(10002);
-  regBank.add(10003);
-  regBank.add(10004);
-  regBank.add(10005);
-  regBank.add(10006);
-  regBank.add(10007);
-  regBank.add(10008);
+  regBank.add(10001);// Exd VFD Run Status
+  regBank.add(10002);// Exd VFD Trip Status
+  regBank.add(10003);// V Tunnel VFD Run Status
+  regBank.add(10004);// V Tunnel VFD Trip Status
 
   //Add Analog Input registers 30001-10010 to the register bank
-  regBank.add(30001);
-  regBank.add(30002);
-  regBank.add(30003);
-  regBank.add(30004);
-  regBank.add(30005);
-  regBank.add(30006);
-  regBank.add(30007);
-  regBank.add(30008);
-  regBank.add(30009);
-  regBank.add(30010);
+  regBank.add(30001);// Barrel Temperature
+  regBank.add(30002);// Die Temperature
+  regBank.add(30003);// Zone1 Temperature
+  regBank.add(30004);// Zone2 Temperature
+  regBank.add(30005);// Zone3 Temperature
+  regBank.add(30006);// Zone4 Temperature
 
   //Add Analog Output registers 40001-40020 to the register bank
-  regBank.add(40001);
-  regBank.add(40002);
-  regBank.add(40003);
-  regBank.add(40004);
-  regBank.add(40005);
-  regBank.add(40006);
-  regBank.add(40007);
-  regBank.add(40008);
-  regBank.add(40009);
-  regBank.add(40010);
-  regBank.add(40011);
-  regBank.add(40012);
-  regBank.add(40013);
-  regBank.add(40014);
-  regBank.add(40015);
-  regBank.add(40016);
-  regBank.add(40017);
-  regBank.add(40018);
-  regBank.add(40019);
-  regBank.add(40020);
+  regBank.add(40001);//Exd VFD Speed
+  regBank.add(40002);//V Tunnel Sped
   slave._device = &regBank;
   slave.setBaud(9600);
   pinMode(ExdVfdRunCommand, OUTPUT);
@@ -95,6 +64,18 @@ void setup()
   pinMode(VTunnelVfdTripStatus, INPUT_PULLUP);
   pinMode(VTunnelVfdSpeed, INPUT);
   analogWrite(VTunnelVfdSpeed, 0);
+  pinMode(BerralTemp, OUTPUT);
+  pinMode(DieTemp, OUTPUT);
+  pinMode(Zon1Temp, OUTPUT);
+  pinMode(Zon2Temp, OUTPUT);
+  pinMode(Zon3Temp, OUTPUT);
+  pinMode(Zon4Temp, OUTPUT);
+  digitalWrite(BerralTemp, HIGH);
+  digitalWrite(DieTemp, HIGH);
+  digitalWrite(Zon1Temp, HIGH);
+  digitalWrite(Zon2Temp, HIGH);
+  digitalWrite(Zon3Temp, HIGH);
+  digitalWrite(Zon4Temp, HIGH);
 }
 void loop()
 {
@@ -103,7 +84,7 @@ void loop()
     int DO1 = regBank.get(1);
     if (DO1 <= 0 && digitalRead(ExdVfdRunCommand) == LOW)digitalWrite(ExdVfdRunCommand, HIGH);
     if (DO1 >= 1 && digitalRead(ExdVfdRunCommand) == HIGH)digitalWrite(ExdVfdRunCommand, LOW);
-int DO2 = regBank.get(2);
+    int DO2 = regBank.get(2);
     if (DO2 <= 0 && digitalRead(VTunnelVfdRunCommand) == LOW)digitalWrite(VTunnelVfdRunCommand, HIGH);
     if (DO2 >= 1 && digitalRead(VTunnelVfdRunCommand) == HIGH)digitalWrite(VTunnelVfdRunCommand, LOW);
 
@@ -117,7 +98,7 @@ int DO2 = regBank.get(2);
     AO1 = map(AO1, 0, 50, 0, 255);
     analogWrite(ExdVfdSpeed, AO1);
     //delay(10);
-byte DI3 = digitalRead(VTunnelVfdRunStatus);
+    byte DI3 = digitalRead(VTunnelVfdRunStatus);
     if (DI3 >= 1)regBank.set(10003, 0);
     if (DI3 <= 0)regBank.set(10003, 1);
     byte DI4 = digitalRead(VTunnelVfdTripStatus);
@@ -126,9 +107,45 @@ byte DI3 = digitalRead(VTunnelVfdRunStatus);
     word AO2 = regBank.get(40002);
     AO2 = map(AO2, 0, 50, 0, 255);
     analogWrite(VTunnelVfdSpeed, AO2);
-    
+    int AI0 = (readCelsius(BerralTemp) * 100);
+    regBank.set(30001, (word) AI0);
+    int AI1 = (readCelsius(DieTemp) * 100);
+    regBank.set(30002, (word) AI1);
+    int AI2 = (readCelsius(Zon1Temp) * 100);
+    regBank.set(30003, (word) AI2);
+    int AI3 = (readCelsius(Zon2Temp) * 100);
+    regBank.set(30004, (word) AI3);
+    int AI4 = (readCelsius(Zon3Temp) * 100);
+    regBank.set(30005, (word) AI4);
+    int AI5 = (readCelsius(Zon4Temp) * 100);
+    regBank.set(30006, (word) AI5);
+    delay(250);
+
+
+
     slave.run();
+
+
   }
+}
+
+double readCelsius(uint8_t cs) {
+  uint16_t v;
+
+  digitalWrite(cs, LOW);
+  v = SPI.transfer(0x00);
+  v <<= 8;
+  v |= SPI.transfer(0x00);
+  digitalWrite(cs, HIGH);
+
+  if (v & 0x4) {
+    // uh oh, no thermocouple attached!
+    return NAN;
+  }
+
+  v >>= 3;
+
+  return v * 0.25;
 }
 /*
   #include <modbus.h>
@@ -277,4 +294,46 @@ byte DI3 = digitalRead(VTunnelVfdRunStatus);
 
   slave.run();
   }
-  }*/
+  }
+  #include <SPI.h>
+
+  double readCelsius(uint8_t cs) {
+    uint16_t v;
+
+    digitalWrite(cs, LOW);
+    v = SPI.transfer(0x00);
+    v <<= 8;
+    v |= SPI.transfer(0x00);
+    digitalWrite(cs, HIGH);
+
+    if (v & 0x4) {
+        // uh oh, no thermocouple attached!
+        return NAN;
+    }
+
+    v >>= 3;
+
+    return v*0.25;
+  }
+
+  void setup() {
+    SPI.begin();
+    pinMode(10, OUTPUT);
+    pinMode(9, OUTPUT);
+    digitalWrite(10, HIGH);
+    digitalWrite(9, HIGH);
+
+    Serial.begin(115200);
+  }
+
+  void loop() {
+    Serial.print(readCelsius(10));
+    Serial.print(" ");
+    Serial.println(readCelsius(9));
+    delay(1000);
+  }
+
+
+
+
+*/
